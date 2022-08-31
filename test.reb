@@ -1,0 +1,1 @@
+foo: bar 'baz :foo "string" 11.22

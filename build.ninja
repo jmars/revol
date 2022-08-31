@@ -1,0 +1,15 @@
+cflags = -Wall -Wextra -std=c99 -Wpedantic -g -Os -static -nostdlib -I/workspace/cosmo -isystem -I/workspace/cosmo/libc/isystem -isystem -fomit-frame-pointer
+ldflags = -Wl,--gc-sections -Wl,-T,cosmo/ape.lds cosmo/crt.o cosmo/ape.o cosmo/cosmopolitan.a
+
+rule cc
+  command = cproc $cflags -c $in -o $out
+
+rule objcopy
+  command = objcopy -S -O binary $in $out
+
+rule ape
+  command = cproc $cflags $in $ldflags -o $out
+
+build revol.o: cc revol.c
+build revol.dbg.com: ape revol.o
+build revol: objcopy revol.dbg.com
