@@ -26,19 +26,21 @@ static bool is_seperator(char c) {
 
 static char content[255];
 
-static rev_word * read_word(char * source) {
+static rev_word * read_word(char * source, bool * skipped) {
   char c = source[0];
   rev_word_tag tag = FREE;
   size_t len = 0;
 
   if (c == ':') {
     tag = GET;
-    content[0] = c;
-    c = source[++len];
-  }
-
-  if (c == '\'') {
+    source++;
+    c = source[0];
+    *skipped = true;
+  } else if (c == '\'') {
     tag = LITERAL;
+    source++;
+    c = source[0];
+    *skipped = true;
   }
 
   while (!is_seperator(c)) {
@@ -48,7 +50,7 @@ static rev_word * read_word(char * source) {
 
   if (c == ':') {
     tag = ASSOC;
-    content[len++] = ':';
+    *skipped = true;
   }
 
   content[len] = '\0';
@@ -135,12 +137,13 @@ int main(int argc, char *argv[]) {
           slice = &(slice[strlen(number)]);
           break;
         };
-        rev_word * word = read_word(slice);
+        bool skipped = false;
+        rev_word * word = read_word(slice, &skipped);
         fprintf(stdout, word->content);
         fprintf(stdout, "\t");
         fprintf(stdout, tag_name[word->tag]);
         fprintf(stdout, "\n");
-        slice = &(slice[strlen(word->content)]);
+        slice = &(slice[strlen(word->content) + skipped]);
         break;
       }
     }
