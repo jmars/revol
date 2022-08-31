@@ -66,12 +66,14 @@ static rev_word * read_word(char * source, bool * skipped) {
 static rev_string * read_string(char * source) {
   size_t len = 0;
 
-  while (source[len++] == '\\' || source[len] != '"') {};
+  do { len++; } while (source[len] == '\\' || source[len] != '"');
+
+  len--;
 
   rev_string * string = malloc(sizeof(rev_string));
   char * content = malloc(sizeof(char) * len);
   memcpy(content, ++source, len);
-  content[len-1] = '\0';
+  content[len] = '\0';
   string->content = content;
 
   return string;
