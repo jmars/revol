@@ -1,4 +1,4 @@
-cflags = -Wall -Wextra -std=c99 -Wpedantic -g -Os -static -nostdlib -I/workspace/cosmo -isystem -I/workspace/cosmo/libc/isystem -isystem -fomit-frame-pointer
+cflags = -Wall -Wextra -std=c99 -Wpedantic -g -Os -static -nostdlib -Icosmo -isystem -Icosmo/libc/isystem -isystem -fomit-frame-pointer
 ldflags = -Wl,--gc-sections -Wl,-T,cosmo/ape.lds cosmo/crt.o cosmo/ape.o cosmo/cosmopolitan.a
 
 rule cc
